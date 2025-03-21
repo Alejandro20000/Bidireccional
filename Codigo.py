@@ -1,68 +1,78 @@
-#para poder usar listas que se puede manipular de mejor forma 
 from collections import deque
 
-#Grafo que se usara de ejemplo
 grafo = {
-    'A': ['B', 'E'],
-    'B': ['A', 'C', 'E'],
-    'C': ['B', 'D', 'E'],
-    'D': ['C'],
-    'E': ['A', 'B', 'C'],
-    'F': ['D']
+    'A': ['B', 'F'],
+    'B': ['A', 'C', 'G'],
+    'C': ['B', 'D', 'H'],
+    'D': ['C', 'E', 'I'],
+    'E': ['D'],
+    'F': ['A', 'G', 'J'],
+    'G': ['B', 'F', 'H'],
+    'H': ['C', 'G', 'I', 'L'],
+    'I': ['D', 'H'],
+    'J': ['F', 'K'],
+    'K': ['J', 'L'],
+    'L': ['H', 'K']
 }
 
-#Variables que se desea buscar
-nodoInicio='A'
-nodoMeta='F'
+nodoInicio = 'A'
+nodoMeta = 'L'
 
-#Ruta
-ruta = deque()
-
-#Metodo de busqueda bidireccional 
 def busquedaBidireccional(grafo, inicio, meta):
-    # Colas para las dos busquedas
-    colaInicio = deque([inicio])
-    colaMeta = deque([meta])
+    colaInicio = deque()
+    colaMeta = deque()
     
-    # Listas de nodos visitados
-    visitadosInicio = {inicio}
-    visitadosMeta = {meta}
+    visitadosInicio = {}
+    visitadosMeta = {}
     
-    #Inicia un bucle para hallar la ruta
+    colaInicio.append(inicio)
+    visitadosInicio[inicio] = None
+    
+    colaMeta.append(meta)
+    visitadosMeta[meta] = None
+    
     while colaInicio and colaMeta:
-        #Crea un deque para verificar resultados sin involucrar el inicio
-        nodoActualInicio = colaInicio.popleft()
-        #Inicia un bucle que verifica si el nodo esta en la lista
-        for vecino in grafo[nodoActualInicio]:
-            if vecino in visitadosMeta:
-                if nodoInicio!=nodoActualInicio:
-                    ruta.appendleft(nodoActualInicio)
-                    busquedaBidireccional(grafo, nodoInicio, nodoActualInicio)
-                    busquedaBidireccional(grafo, nodoActualInicio, nodoMeta)
-                ruta.appendleft(nodoActualInicio)
-                return
-                #return f"{nodoActualInicio} -> {vecino}"
+        buscarInicio = colaInicio.popleft()
+        for vecino in grafo[buscarInicio]:
             if vecino not in visitadosInicio:
-                visitadosInicio.add(vecino)
+                visitadosInicio[vecino] = buscarInicio
                 colaInicio.append(vecino)
+                
+            if vecino in visitadosMeta:
+                return rutaCompleta(visitadosInicio, visitadosMeta, vecino)
         
-        #Crea un deque para verificar resultados sin involucrar la meta
-        nodoActualMeta = colaMeta.popleft()
-        #Inicia un bucle que verifica si el nodo esta en la lista
-        for vecino in grafo[nodoActualMeta]:
-            if vecino in visitadosInicio:
-                if nodoMeta!=nodoActualMeta:
-                    ruta.append(nodoActualMeta)
-                    busquedaBidireccional(grafo, nodoActualMeta, nodoMeta)
-                    busquedaBidireccional(grafo, nodoInicio, nodoActualMeta)
-                ruta.append(nodoActualMeta)
-                return 
-                #return f"{vecino} -> {nodoActualMeta}"
+        buscarMeta = colaMeta.popleft()
+        for vecino in grafo[buscarMeta]:
             if vecino not in visitadosMeta:
-                visitadosMeta.add(vecino)
+                visitadosMeta[vecino] = buscarMeta
                 colaMeta.append(vecino)
+                
+            if vecino in visitadosInicio:
+                return rutaCompleta(visitadosInicio, visitadosMeta, vecino)
     
-    return "No hay ruta"
+    return None
 
-#Para ver la ruta corta que se logro conseguir
-busquedaBidireccional(grafo, nodoInicio, nodoMeta)
+def rutaCompleta(visitadosInicio, visitadosMeta, puntoDeEncuentro):
+    puntoDeInicio = []
+    actual = puntoDeEncuentro
+    while actual is not None:
+        puntoDeInicio.append(actual)
+        actual = visitadosInicio[actual]
+    
+    puntoDeMeta = []
+    actual = puntoDeEncuentro
+    while actual is not None:
+        puntoDeMeta.append(actual)
+        actual = visitadosMeta[actual]
+    
+    puntoDeInicio.reverse()
+    puntoDeMeta = puntoDeMeta[1:]
+    caminoCompleto = puntoDeInicio + puntoDeMeta
+    
+    return caminoCompleto
+
+path = busquedaBidireccional(grafo, nodoInicio, nodoMeta)
+if path:
+    print("Camino encontrado:", path)
+else:
+    print("No se encontró un camino.")
