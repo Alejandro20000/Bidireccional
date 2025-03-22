@@ -53,21 +53,21 @@ def busquedaBidireccional(grafo, inicio, meta):
     return None
 
 def rutaCompleta(visitadosInicio, visitadosMeta, puntoDeEncuentro):
-    puntoDeInicio = []
+    rutaDeInicio = []
     actual = puntoDeEncuentro
     while actual is not None:
-        puntoDeInicio.append(actual)
+        rutaDeInicio.append(actual)
         actual = visitadosInicio[actual]
     
-    puntoDeMeta = []
+    rutaDeMeta = []
     actual = puntoDeEncuentro
     while actual is not None:
-        puntoDeMeta.append(actual)
+        rutaDeMeta.append(actual)
         actual = visitadosMeta[actual]
     
-    puntoDeInicio.reverse()
-    puntoDeMeta = puntoDeMeta[1:]
-    caminoCompleto = puntoDeInicio + puntoDeMeta
+    rutaDeInicio.reverse()
+    rutaDeMeta = rutaDeMeta[1:]
+    caminoCompleto = rutaDeInicio + rutaDeMeta
     
     return caminoCompleto
 
