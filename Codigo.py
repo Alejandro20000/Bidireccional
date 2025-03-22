@@ -71,8 +71,8 @@ def rutaCompleta(visitadosInicio, visitadosMeta, puntoDeEncuentro):
     
     return caminoCompleto
 
-path = busquedaBidireccional(grafo, nodoInicio, nodoMeta)
-if path:
-    print("Camino encontrado:", path)
+ruta = busquedaBidireccional(grafo, nodoInicio, nodoMeta)
+if ruta:
+    print("Camino encontrado:", ruta)
 else:
     print("No se encontró un camino.")
