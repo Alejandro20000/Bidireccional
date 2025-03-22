@@ -1,0 +1,84 @@
+grafo ← {
+    'A': ['B', 'F'],
+    'B': ['A', 'C', 'G'],
+    'C': ['B', 'D', 'H'],
+    'D': ['C', 'E', 'I'],
+    'E': ['D'],
+    'F': ['A', 'G', 'J'],
+    'G': ['B', 'F', 'H'],
+    'H': ['C', 'G', 'I', 'L'],
+    'I': ['D', 'H'],
+    'J': ['F', 'K'],
+    'K': ['J', 'L'],
+    'L': ['H', 'K']
+}
+
+nodoInicio ← 'A'
+nodoMeta ← 'L'
+
+función BÚSQUEDA-BIDIRECCIONAL(grafo, inicio, meta) devuelve una ruta, o fallo
+    entradas: grafo, conjunto de nodos
+              inicio, nodo principal
+              meta, nodo final
+    
+    colaInicio ← COLA-VACÍA()
+    colaMeta ← COLA-VACÍA()
+    
+    visitadosInicio ← DICCIONARIO-VACÍO()
+    visitadosMeta ← DICCIONARIO-VACÍO()
+    
+    colaInicio.ENCOLAR(inicio)
+    visitadosInicio[inicio] ← NULO
+    
+    colaMeta.ENCOLAR(meta)
+    visitadosMeta[meta] ← NULO
+    
+    mientras colaInicio no esté vacía Y colaMeta no esté vacía hacer
+        buscarInicio ← colaInicio.DESENCOLAR()
+        para cada vecino en grafo[buscarInicio] hacer
+            si vecino no está en visitadosInicio entonces
+                visitadosInicio[vecino] ← buscarInicio
+                colaInicio.ENCOLAR(vecino)
+                
+            si vecino está en visitadosMeta entonces
+                devolver RUTA-COMPLETA(visitadosInicio, visitadosMeta, vecino)
+        
+        buscarMeta ← colaMeta.DESENCOLAR()
+        para cada vecino en grafo[buscarMeta] hacer
+            si vecino no está en visitadosMeta entonces
+                visitadosMeta[vecino] ← buscarMeta
+                colaMeta.ENCOLAR(vecino)
+                
+            si vecino está en visitadosInicio entonces
+                devolver RUTA-COMPLETA(visitadosInicio, visitadosMeta, vecino)
+    
+    devolver fallo
+
+función RUTA-COMPLETA(visitadosInicio, visitadosMeta, puntoDeEncuentro) devuelve una ruta
+    entradas: visitadosInicio, conjunto de nudos vistados por la ruta de inicio
+              visitadosMeta, conjunto de nudos vistados por la ruta de meta
+              puntoDeEncuentro, nodo que conecta la ruta completa
+
+    rutaDeInicio ← LISTA-VACÍA()
+    actual ← puntoDeEncuentro
+    mientras actual no sea NULO hacer
+        rutaDeInicio.AGREGAR(actual)
+        actual ← visitadosInicio[actual]
+    
+    rutaDeMeta ← LISTA-VACÍA()
+    actual ← puntoDeEncuentro
+    mientras actual no sea NULO hacer
+        rutaDeMeta.AGREGAR(actual)
+        actual ← visitadosMeta[actual]
+    
+    rutaDeInicio.INVERTIR()
+    rutaDeMeta ← rutaDeMeta[1:]
+    caminoCompleto ← rutaDeInicio + rutaDeMeta
+    
+    devolver caminoCompleto
+
+ruta ← BÚSQUEDA-BIDIRECCIONAL(grafo, nodoInicio, nodoMeta)
+si ruta ≠ fallo entonces
+    imprimir("Camino encontrado:", ruta)
+si no
+    imprimir("No se encontró un camino.")
