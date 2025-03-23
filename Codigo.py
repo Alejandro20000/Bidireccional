@@ -1,22 +1,25 @@
 from collections import deque
 
 grafo = {
-    'A': ['B', 'F'],
-    'B': ['A', 'C', 'G'],
-    'C': ['B', 'D', 'H'],
-    'D': ['C', 'E', 'I'],
-    'E': ['D'],
-    'F': ['A', 'G', 'J'],
-    'G': ['B', 'F', 'H'],
-    'H': ['C', 'G', 'I', 'L'],
-    'I': ['D', 'H'],
-    'J': ['F', 'K'],
-    'K': ['J', 'L'],
-    'L': ['H', 'K']
+    'A': ['C'],
+    'C': ['A', 'D', 'F'],
+    'D': ['C'],
+    'F': ['C', 'G', 'I'],
+    'G': ['L', 'K', 'F'],
+    'H': ['X', 'P', 'R'],
+    'I': ['F', 'X'],
+    'K': ['G'],
+    'L': ['G'],
+    'M': ['Y'],
+    'N': ['Y'],
+    'P': ['H'],
+    'R': ['H'],
+    'X': ['I', 'Y', 'H'],
+    'Y': ['M', 'N', 'X']
 }
 
 nodoInicio = 'A'
-nodoMeta = 'L'
+nodoMeta = 'R'
 
 def busquedaBidireccional(grafo, inicio, meta):
     colaInicio = deque()
